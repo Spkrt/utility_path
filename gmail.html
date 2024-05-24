@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Auto Sign-In Example</title>
+<script src="https://apis.google.com/js/platform.js" async defer></script>
+<meta name="google-signin-client_id" content="360966875007-3984blv5h6c8vqrppnt7h67ikmamlutc.apps.googleusercontent.com">
+</head>
+<body>
+
+<!-- Google Sign-In button (hidden) -->
+<div id="gSignInWrapper" style="display: none;">
+  <div id="customBtn" class="customGPlusSignIn">
+    <span class="icon"></span>
+    <span class="buttonText">Sign in with Google</span>
+  </div>
+</div>
+
+<!-- Display user information -->
+<div id="userInfo"></div>
+
+<script>
+function onSignIn(googleUser) {
+  var profile = googleUser.getBasicProfile();
+  
+  // Accessing user information
+  var userId = profile.getId();
+  var userName = profile.getName();
+  var userEmail = profile.getEmail();
+  var userProfilePicture = profile.getImageUrl();
+
+  var userInfoHTML = '<p>User ID: ' + userId + '</p>' +
+                     '<p>User Name: ' + userName + '</p>' + 
+                     '<p>User Email: ' + userEmail + '</p>' +
+                     '<img src="' + userProfilePicture + '" alt="Profile Picture">';
+
+  
+  document.getElementById('userInfo').innerHTML = userInfoHTML;
+}
+
+
+function onSignInFailure(error) {
+  document.getElementById('userInfo').innerHTML = '<p>Error: ' + error.error + '</p>';
+}
+
+function onLoad() {
+  gapi.load('auth2', function() {
+    var auth2 = gapi.auth2.init({
+      client_id: '360966875007-3984blv5h6c8vqrppnt7h67ikmamlutc.apps.googleusercontent.com', // ระบุ Client ID ของคุณที่นี่
+      scope: 'profile email https://www.googleapis.com/auth/user.phonenumbers.read https://www.googleapis.com/auth/userinfo.email',
+    plugin_name: "chat",
+    });
+    auth2.signIn().then(onSignIn, onSignInFailure);
+  });
+}
+
+window.onload = onLoad;
+</script>
+
+
+</body>
+</html>
